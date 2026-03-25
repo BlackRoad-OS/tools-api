@@ -1,219 +1,48 @@
-# BlackRoad Tools API
+<!-- BlackRoad SEO Enhanced -->
 
-Core API for BlackRoad's AI agent ecosystem. Provides agent management, persistent memory (PS-SHA∞), trinary reasoning, and multi-agent coordination.
+# tools api
 
-## Architecture
+> Part of **[BlackRoad OS](https://blackroad.io)** — Sovereign Computing for Everyone
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     BlackRoad Tools API                         │
-├────────────────┬────────────────┬───────────────┬───────────────┤
-│     Agent      │    Memory      │   Reasoning   │ Coordination  │
-│   Management   │   (PS-SHA∞)    │   (Trinary)   │  (Event Bus)  │
-├────────────────┴────────────────┴───────────────┴───────────────┤
-│                    Cloudflare Workers Runtime                    │
-├─────────────────────────────────┬───────────────────────────────┤
-│            D1 Database          │         KV Storage            │
-│         (980 agents)            │    (memory, events, state)    │
-└─────────────────────────────────┴───────────────────────────────┘
-```
+[![BlackRoad OS](https://img.shields.io/badge/BlackRoad-OS-ff1d6c?style=for-the-badge)](https://blackroad.io)
+[![BlackRoad OS](https://img.shields.io/badge/Org-BlackRoad-OS-2979ff?style=for-the-badge)](https://github.com/BlackRoad-OS)
+[![License](https://img.shields.io/badge/License-Proprietary-f5a623?style=for-the-badge)](LICENSE)
 
-## Quick Start
+**tools api** is part of the **BlackRoad OS** ecosystem — a sovereign, distributed operating system built on edge computing, local AI, and mesh networking by **BlackRoad OS, Inc.**
 
-### Installation
+## About BlackRoad OS
 
-```bash
-npm install @blackroad/skills-sdk
-```
+BlackRoad OS is a sovereign computing platform that runs AI locally on your own hardware. No cloud dependencies. No API keys. No surveillance. Built by [BlackRoad OS, Inc.](https://github.com/BlackRoad-OS-Inc), a Delaware C-Corp founded in 2025.
 
-### Basic Usage
+### Key Features
+- **Local AI** — Run LLMs on Raspberry Pi, Hailo-8, and commodity hardware
+- **Mesh Networking** — WireGuard VPN, NATS pub/sub, peer-to-peer communication
+- **Edge Computing** — 52 TOPS of AI acceleration across a Pi fleet
+- **Self-Hosted Everything** — Git, DNS, storage, CI/CD, chat — all sovereign
+- **Zero Cloud Dependencies** — Your data stays on your hardware
 
-```typescript
-import { BlackRoadSDK } from '@blackroad/skills-sdk';
+### The BlackRoad Ecosystem
+| Organization | Focus |
+|---|---|
+| [BlackRoad OS](https://github.com/BlackRoad-OS) | Core platform and applications |
+| [BlackRoad OS, Inc.](https://github.com/BlackRoad-OS-Inc) | Corporate and enterprise |
+| [BlackRoad AI](https://github.com/BlackRoad-AI) | Artificial intelligence and ML |
+| [BlackRoad Hardware](https://github.com/BlackRoad-Hardware) | Edge hardware and IoT |
+| [BlackRoad Security](https://github.com/BlackRoad-Security) | Cybersecurity and auditing |
+| [BlackRoad Quantum](https://github.com/BlackRoad-Quantum) | Quantum computing research |
+| [BlackRoad Agents](https://github.com/BlackRoad-Agents) | Autonomous AI agents |
+| [BlackRoad Network](https://github.com/BlackRoad-Network) | Mesh and distributed networking |
+| [BlackRoad Education](https://github.com/BlackRoad-Education) | Learning and tutoring platforms |
+| [BlackRoad Labs](https://github.com/BlackRoad-Labs) | Research and experiments |
+| [BlackRoad Cloud](https://github.com/BlackRoad-Cloud) | Self-hosted cloud infrastructure |
+| [BlackRoad Forge](https://github.com/BlackRoad-Forge) | Developer tools and utilities |
 
-const sdk = new BlackRoadSDK({
-  baseUrl: 'https://blackroad-tools.amundsonalexa.workers.dev'
-});
+### Links
+- **Website**: [blackroad.io](https://blackroad.io)
+- **Documentation**: [docs.blackroad.io](https://docs.blackroad.io)
+- **Chat**: [chat.blackroad.io](https://chat.blackroad.io)
+- **Search**: [search.blackroad.io](https://search.blackroad.io)
 
-// High-level operations
-const thought = await sdk.think('What patterns exist in this data?');
-const memory = await sdk.learn({ insight: 'Key finding from analysis' });
-const answer = await sdk.ask('agent-0001', 'What do you recommend?');
-const result = await sdk.collaborate(['agent-0010', 'agent-0020'], 'Solve this problem');
-```
+---
 
-## API Modules
 
-### Agent Management
-
-Manage the lifecycle of 980+ AI agents.
-
-```typescript
-// List agents
-GET /tools/agent/list?type=analyst&limit=20
-
-// Get agent details
-GET /tools/agent/agent-0001
-
-// Spawn new agent
-POST /tools/agent/spawn
-{ "name": "Nova", "type": "visionary", "capabilities": ["futures_thinking"] }
-
-// Invoke agent capability
-POST /tools/agent/agent-0001/invoke
-{ "capability": "pattern_recognition", "input": { "data": [...] } }
-```
-
-**Agent Types**: analyst, architect, biologist, builder, chemist, coordinator, creative, economist, engineer, guardian, historian, linguist, mathematician, mediator, navigator, philosopher, physicist, psychologist, researcher, speaker, strategist, synthesizer, teacher, theorist, visionary
-
-### Memory System (PS-SHA∞)
-
-Append-only memory with cryptographic hash chains for integrity verification.
-
-```typescript
-// Store memory
-POST /tools/memory/store
-{
-  "agent_id": "agent-0001",
-  "content": { "thought": "Important insight" },
-  "tags": ["insight", "verified"]
-}
-
-// Recall memories
-POST /tools/memory/recall
-{
-  "agent_id": "agent-0001",
-  "query": "insights about patterns",
-  "limit": 10
-}
-
-// Verify memory chain integrity
-POST /tools/memory/verify
-{ "hash": "abc123def4567890" }
-```
-
-### Reasoning Engine (Trinary Logic)
-
-Three-valued logic: TRUE (1), FALSE (-1), UNKNOWN (0).
-
-```typescript
-// Evaluate proposition
-POST /tools/reasoning/evaluate
-{
-  "proposition": "The data supports hypothesis X",
-  "evidence": [{ "type": "statistical", "p_value": 0.03 }]
-}
-// Returns: { "value": 1, "confidence": 0.95, "reasoning": "..." }
-
-// Resolve contradictions
-POST /tools/reasoning/resolve
-{
-  "claims": [
-    { "statement": "X is optimal", "source": "agent-001", "confidence": 0.9 },
-    { "statement": "Y is optimal", "source": "agent-002", "confidence": 0.7 }
-  ],
-  "strategy": "quarantine"  // or: branch, merge, escalate
-}
-
-// Inference chain
-POST /tools/reasoning/infer
-{
-  "premises": ["All agents have capabilities", "Aurora is an agent"],
-  "goal": "Aurora has capabilities"
-}
-```
-
-### Coordination (Event Bus)
-
-Pub/sub messaging and multi-agent orchestration.
-
-```typescript
-// Publish event
-POST /tools/coordination/publish
-{
-  "event_type": "task.completed",
-  "payload": { "task_id": "123", "result": "success" },
-  "source_agent": "agent-0001"
-}
-
-// Subscribe to events
-POST /tools/coordination/subscribe
-{
-  "agent_id": "agent-0002",
-  "event_types": ["task.created", "task.completed"]
-}
-
-// Orchestrate multi-agent task
-POST /tools/coordination/orchestrate
-{
-  "task": { "description": "Analyze dataset", "goal": "Extract insights" },
-  "agents": ["agent-0010", "agent-0020", "agent-0030"],
-  "strategy": "parallel"  // or: sequential, hierarchical, consensus
-}
-```
-
-## CLI Tool
-
-```bash
-# Agent commands
-br-tools agent:list analyst 20
-br-tools agent:get agent-0001
-br-tools agent:spawn "Nova" visionary
-
-# Memory commands
-br-tools memory:store agent-0001 "Important insight" insight verified
-br-tools memory:recall agent-0001 "patterns"
-
-# Reasoning commands
-br-tools reason:evaluate "The hypothesis is supported"
-
-# Coordination commands
-br-tools coord:orchestrate "Analyze data" agent-0010 agent-0020
-
-# Utility
-br-tools health
-```
-
-## Local Development
-
-```bash
-# Install dependencies
-npm install
-
-# Start local dev server
-npm run dev
-
-# Or use Docker
-docker-compose up
-
-# Run tests
-npm test
-```
-
-## Deployment
-
-Automatic deployment via GitHub Actions when you push to main. Requires these repository secrets:
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_API_TOKEN`
-
-## Database
-
-980 agents across 25 types. Schema:
-
-```sql
-CREATE TABLE agents (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  type TEXT NOT NULL,
-  capabilities TEXT,
-  birthday TEXT,
-  family TEXT,
-  memory_hash TEXT,
-  home_world TEXT DEFAULT 'lucidia',
-  status TEXT DEFAULT 'active'
-);
-```
-
-## License
-
-MIT © BlackRoad OS, Inc.
